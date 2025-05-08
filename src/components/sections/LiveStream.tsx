@@ -34,7 +34,7 @@ export const LiveStream: React.FC<LiveStreamProps> = ({
         subtitle="Bagi keluarga dan sahabat yang tidak bisa hadir, kami menyediakan live streaming"
       />
 
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
         {hasYoutube && (
           <motion.div
             className="bg-rose-50 rounded-2xl p-6 md:p-8 shadow-md"
@@ -84,7 +84,7 @@ export const LiveStream: React.FC<LiveStreamProps> = ({
                     clipRule="evenodd"
                   />
                 </svg>
-                Join Live Stream
+                Join
               </Button>
             </div>
           </motion.div>
@@ -164,7 +164,7 @@ export const LiveStream: React.FC<LiveStreamProps> = ({
                     <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
                     <path d="M14 6a2 2 0 012-2h2a2 2 0 012 2v8a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z" />
                   </svg>
-                  Join Zoom Meeting
+                  Join
                 </Button>
               </div>
             )}

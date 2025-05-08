@@ -23,6 +23,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(autoNavigate);
   const [showNav, setShowNav] = useState<boolean>(true);
   const [lastScrollY, setLastScrollY] = useState<number>(0);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
 
   // Handle scroll to detect active section
   useEffect(() => {
@@ -38,11 +39,13 @@ export const Navigation: React.FC<NavigationProps> = ({
         element: document.getElementById(section.id),
       }));
 
+      const viewportHeight = window.innerHeight;
       const currentSection = sectionElements.find((section) => {
         if (!section.element) return false;
         const rect = section.element.getBoundingClientRect();
-        // Consider a section "active" when its top is near the top of the viewport
-        return rect.top <= 150 && rect.bottom > 150;
+        // Consider a section "active" when its center is in the viewport
+        const elementCenter = rect.top + rect.height / 2;
+        return elementCenter >= 0 && elementCenter <= viewportHeight;
       });
 
       if (currentSection) {
@@ -68,8 +71,17 @@ export const Navigation: React.FC<NavigationProps> = ({
       if (nextSection) {
         const element = document.getElementById(nextSection.id);
         if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
+          setIsScrolling(true);
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
           setActiveSection(nextSection.id);
+
+          // Reset scrolling state after animation completes
+          setTimeout(() => {
+            setIsScrolling(false);
+          }, 1000);
         }
       }
     }, autoNavigateInterval);
@@ -78,10 +90,21 @@ export const Navigation: React.FC<NavigationProps> = ({
   }, [isPlaying, activeSection, sections, autoNavigateInterval]);
 
   const scrollToSection = (sectionId: string) => {
+    if (isScrolling) return; // Prevent multiple scroll actions
+
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      setIsScrolling(true);
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
       setActiveSection(sectionId);
+
+      // Reset scrolling state after animation completes
+      setTimeout(() => {
+        setIsScrolling(false);
+      }, 1000);
     }
   };
 
@@ -93,13 +116,13 @@ export const Navigation: React.FC<NavigationProps> = ({
     <AnimatePresence>
       {showNav && (
         <motion.div
-          className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-t border-gray-200 shadow-lg"
+          className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-gray-200 shadow-lg max-w-md mx-auto"
           initial={{ y: 100 }}
           animate={{ y: 0 }}
           exit={{ y: 100 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="container mx-auto px-4 py-2">
+          <div className="px-2 py-3">
             <div className="flex items-center justify-between">
               {/* Auto-play toggle */}
               <button
@@ -112,11 +135,12 @@ export const Navigation: React.FC<NavigationProps> = ({
                 aria-label={
                   isPlaying ? "Pause auto-navigation" : "Start auto-navigation"
                 }
+                disabled={isScrolling}
               >
                 {isPlaying ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
+                    className="h-4 w-4"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -129,7 +153,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                 ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
+                    className="h-4 w-4"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -143,31 +167,41 @@ export const Navigation: React.FC<NavigationProps> = ({
               </button>
 
               {/* Navigation dots */}
-              <div className="flex-1 overflow-x-auto py-2 px-4">
-                <div className="flex items-center justify-center space-x-4">
+              <div className="flex-1 overflow-x-auto py-1 px-2">
+                <div className="flex items-center justify-center gap-2">
                   {sections.map((section) => (
                     <button
                       key={section.id}
                       onClick={() => scrollToSection(section.id)}
-                      className={`flex flex-col items-center transition-all duration-300 ${
+                      className={`flex flex-col items-center transition-all duration-300 px-1.5 ${
                         activeSection === section.id
                           ? "text-rose-600 scale-110"
                           : "text-gray-400 hover:text-gray-600"
-                      }`}
+                      } ${isScrolling ? "pointer-events-none" : ""}`}
                       aria-label={`Navigate to ${section.label}`}
+                      disabled={isScrolling}
                     >
-                      {section.icon ? (
-                        section.icon
-                      ) : (
-                        <div
-                          className={`w-2 h-2 rounded-full ${
-                            activeSection === section.id
-                              ? "bg-rose-600"
-                              : "bg-gray-400"
-                          }`}
-                        ></div>
-                      )}
-                      <span className="text-xs mt-1 whitespace-nowrap">
+                      <div className="h-6 w-6 flex items-center justify-center">
+                        {section.icon ? (
+                          React.cloneElement(
+                            section.icon as React.ReactElement<{
+                              className?: string;
+                            }>,
+                            {
+                              className: "h-4 w-4",
+                            }
+                          )
+                        ) : (
+                          <div
+                            className={`w-2.5 h-2.5 rounded-full ${
+                              activeSection === section.id
+                                ? "bg-rose-600"
+                                : "bg-gray-400"
+                            }`}
+                          ></div>
+                        )}
+                      </div>
+                      <span className="text-[10px] mt-0.5 whitespace-nowrap font-medium">
                         {section.label}
                       </span>
                     </button>
@@ -177,9 +211,9 @@ export const Navigation: React.FC<NavigationProps> = ({
 
               {/* Progress indicator */}
               {isPlaying && (
-                <div className="relative w-8 h-8">
+                <div className="relative w-6 h-6">
                   <svg
-                    className="w-8 h-8 transform -rotate-90"
+                    className="w-6 h-6 transform -rotate-90"
                     viewBox="0 0 32 32"
                   >
                     <circle
@@ -210,7 +244,7 @@ export const Navigation: React.FC<NavigationProps> = ({
                       }}
                     />
                   </svg>
-                  <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-rose-600">
+                  <div className="absolute inset-0 flex items-center justify-center text-[10px] font-medium text-rose-600">
                     {Math.ceil(autoNavigateInterval / 1000)}s
                   </div>
                 </div>

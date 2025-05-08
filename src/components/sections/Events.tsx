@@ -41,7 +41,7 @@ export const Events: React.FC<EventsProps> = ({ events }) => {
         subtitle="Kami mengundang Anda untuk merayakan momen bahagia ini bersama kami"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mt-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
         {events.map((event) => (
           <motion.div
             key={event.id}
@@ -51,7 +51,7 @@ export const Events: React.FC<EventsProps> = ({ events }) => {
             viewport={{ once: true, margin: "-50px" }}
             variants={containerVariants}
           >
-            <div className="p-6 md:p-8">
+            <div className="p-4 md:p-8">
               <motion.div variants={itemVariants}>
                 <h3 className="text-2xl font-serif text-rose-800 mb-3">
                   {event.title}

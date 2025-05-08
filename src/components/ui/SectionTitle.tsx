@@ -6,14 +6,12 @@ interface SectionTitleProps {
   title: string;
   subtitle?: string;
   centered?: boolean;
-  className?: string;
 }
 
 export const SectionTitle: React.FC<SectionTitleProps> = ({
   title,
   subtitle,
   centered = true,
-  className = "",
 }) => {
   const titleVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -21,7 +19,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.4,
+        duration: 0.6,
         ease: "easeOut",
       },
     },
@@ -33,22 +31,30 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.4,
+        duration: 0.6,
         delay: 0.2,
         ease: "easeOut",
       },
     },
   };
 
-  const alignment = centered ? "text-center" : "text-left";
+  const decorationVariants = {
+    hidden: { width: 0, opacity: 0 },
+    visible: {
+      width: "60px",
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        delay: 0.4,
+        ease: "easeOut",
+      },
+    },
+  };
 
   return (
-    <div className={`mb-12 ${alignment} ${className}`}>
+    <div className={`${centered ? "text-center" : ""} mb-8`}>
       <motion.h2
-        className="text-3xl md:text-4xl font-serif font-bold text-rose-800"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
+        className="text-2xl font-serif text-rose-800 mb-2"
         variants={titleVariants}
       >
         {title}
@@ -56,10 +62,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
 
       {subtitle && (
         <motion.p
-          className="mt-3 text-lg text-gray-600"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          className="text-gray-600 text-sm max-w-lg mx-auto"
           variants={subtitleVariants}
         >
           {subtitle}
@@ -67,13 +70,8 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
       )}
 
       <motion.div
-        className={`h-1 w-20 bg-amber-400 mt-4 ${
-          centered ? "mx-auto" : "ml-0"
-        }`}
-        initial={{ width: 0, opacity: 0 }}
-        whileInView={{ width: 80, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        viewport={{ once: true }}
+        className={`h-0.5 bg-rose-200 mt-4 ${centered ? "mx-auto" : "ml-0"}`}
+        variants={decorationVariants}
       />
     </div>
   );

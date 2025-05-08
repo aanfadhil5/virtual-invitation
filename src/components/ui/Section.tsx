@@ -7,7 +7,8 @@ interface SectionProps {
   className?: string;
   id?: string;
   backgroundColor?: string;
-  withContainer?: boolean;
+  minHeight?: string;
+  paddingY?: string;
 }
 
 // Define the animation variants
@@ -28,33 +29,23 @@ export const Section: React.FC<SectionProps> = ({
   className = "",
   id,
   backgroundColor = "bg-white",
-  withContainer = true,
+  minHeight = "min-h-[90vh]", // Default minimum height
+  paddingY = "py-16", // Increased padding
 }) => {
   return (
     <section
       id={id}
-      className={`py-16 md:py-24 ${backgroundColor} ${className}`}
+      className={`${paddingY} ${backgroundColor} ${minHeight} ${className} relative scroll-mt-4`}
     >
-      {withContainer ? (
-        <motion.div
-          className="container mx-auto px-4 md:px-8"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={containerVariants}
-        >
-          {children}
-        </motion.div>
-      ) : (
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={containerVariants}
-        >
-          {children}
-        </motion.div>
-      )}
+      <motion.div
+        className="mx-auto h-full flex flex-col justify-center"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={containerVariants}
+      >
+        {children}
+      </motion.div>
     </section>
   );
 };

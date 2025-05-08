@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../ui/Button";
 
@@ -15,6 +15,20 @@ export const Hero: React.FC<HeroProps> = ({
   backgroundImage = "/images/hero-bg.jpg",
 }) => {
   const [isInvitationOpen, setIsInvitationOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    // Check if the image exists
+    const img = new Image();
+    img.src = backgroundImage;
+    img.onload = () => {
+      setImageError(false);
+    };
+    img.onerror = () => {
+      setImageError(true);
+      console.error("Failed to load background image:", backgroundImage);
+    };
+  }, [backgroundImage]);
 
   const openInvitation = () => {
     setIsInvitationOpen(true);
@@ -22,7 +36,10 @@ export const Hero: React.FC<HeroProps> = ({
     setTimeout(() => {
       const nextSection = document.getElementById("greeting");
       if (nextSection) {
-        nextSection.scrollIntoView({ behavior: "smooth" });
+        nextSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }
     }, 1000);
   };
@@ -68,6 +85,13 @@ export const Hero: React.FC<HeroProps> = ({
       id="hero"
       className="relative h-screen flex items-center justify-center overflow-hidden"
     >
+      {/* Debug Information */}
+      {imageError && (
+        <div className="absolute top-0 left-0 bg-red-500 text-white p-2 z-50">
+          Error loading image: {backgroundImage}
+        </div>
+      )}
+
       {/* Background Image with Overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -76,6 +100,9 @@ export const Hero: React.FC<HeroProps> = ({
           filter: "brightness(0.6)",
         }}
       />
+
+      {/* Fallback background color if image fails to load */}
+      {imageError && <div className="absolute inset-0 bg-gray-800"></div>}
 
       {/* Content */}
       <AnimatePresence>

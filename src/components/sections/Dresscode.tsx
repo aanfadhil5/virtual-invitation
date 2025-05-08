@@ -92,7 +92,7 @@ export const Dresscode: React.FC<DresscodeProps> = ({ dresscodeItems }) => {
       />
 
       <div className="mt-12 max-w-3xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {dresscodeItems.map((item, index) => (
             <motion.div
               key={item.id}

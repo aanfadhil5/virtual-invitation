@@ -40,7 +40,7 @@ export const Gift: React.FC<GiftProps> = ({
         subtitle="Kehadiran dan doa Anda adalah hadiah terbaik bagi kami. Namun jika Anda ingin memberikan hadiah, kami menyediakan opsi berikut"
       />
 
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
         {/* Angpao Digital */}
         <motion.div
           className="bg-white rounded-2xl p-6 md:p-8 shadow-md text-center"
