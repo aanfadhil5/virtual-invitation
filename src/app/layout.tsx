@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { MusicPlayer } from "@/components/ui/MusicPlayer";
+import { MusicProvider } from "@/contexts/MusicContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +22,16 @@ export default function RootLayout({
         className={`${inter.className} overflow-x-hidden`}
         suppressHydrationWarning
       >
-        <div className="mx-auto max-w-md bg-white min-h-screen shadow-xl overflow-hidden relative">
-          {children}
-        </div>
+        <MusicProvider>
+          <div className="mx-auto max-w-md bg-white min-h-screen shadow-xl overflow-hidden relative">
+            {children}
+            {/* 
+              Note: You need to add an MP3 file at public/audio/wedding-song.mp3
+              You can use any royalty-free wedding music of your choice
+            */}
+            <MusicPlayer audioSrc="/audio/wedding-song.mp3" />
+          </div>
+        </MusicProvider>
       </body>
     </html>
   );

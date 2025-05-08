@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../ui/Button";
+import { useMusic } from "@/contexts/MusicContext";
 
 interface HeroProps {
   bridesName: string;
@@ -16,6 +17,7 @@ export const Hero: React.FC<HeroProps> = ({
 }) => {
   const [isInvitationOpen, setIsInvitationOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const { startPlaying } = useMusic();
 
   useEffect(() => {
     // Check if the image exists
@@ -32,6 +34,8 @@ export const Hero: React.FC<HeroProps> = ({
 
   const openInvitation = () => {
     setIsInvitationOpen(true);
+    // Start playing music when invitation is opened
+    startPlaying();
     // Scroll to the next section after opening
     setTimeout(() => {
       const nextSection = document.getElementById("greeting");

@@ -12,7 +12,7 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({
   copyrightName = "Wedding Invitation",
   developerName = "Farhan Fadhilah",
-  developerUrl = "https://farhanfadhilah.com",
+  developerUrl = "https://wa.link/u8n5oq",
 }) => {
   const currentYear = new Date().getFullYear();
 
